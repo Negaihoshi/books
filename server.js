@@ -73,15 +73,24 @@ app.post('/url', function (req, res, next) {
       res.send('Readmoo' + ' ' + bookName + '_' + originPrice + '_' + discount + '_'  + disCountPrice + '_' + '電子書');
     });
       break;
+    case 'www.tenlong.com.tw':
+    requestAPI(req.body.path).then((data) => {
+      let $ = cheerio.load(data);
+      let bookName =  $('.item_title').text();
+      let originPrice = $('.item_description > li:nth-child(3) > del:nth-child(2)').text();
+      let disCountPrice = $('span.pricing:nth-child(3)').text();
+      let discount = $('span.pricing:nth-child(2)').text();
+      console.info('書名：', bookName);
+      console.info('原始金額：', originPrice);
+      console.info('折扣後金額：', disCountPrice);
+      console.info('折扣：', discount);
+      // return originPrice + '_' + discount + '_'  + disCountPrice;
+      res.send('天瓏' + ' ' + bookName + '_' + originPrice + '_' + discount + '_'  + disCountPrice + '_' + '實體書');
+    });
+      break;
     default:
     res.send('not support this website');
   }
-
-  // res.json(req.body);
-
-
-
-
 });
 
 app.listen(3000, () => {
