@@ -1,3 +1,7 @@
+require('babel-core/register')({
+  presets: ['es2015-node5', 'stage-3']
+});
+
 let express = require('express');
 let app = express();
 let bodyParser = require('body-parser')
@@ -8,8 +12,9 @@ let log4js = require('log4js');
 log4js.replaceConsole();
 
 let requestAPI = (url) => {
-  return new Promise(function (resolve, reject) {
-    request(url, function (error, response, body) {
+
+  return new Promise((resolve, reject) => {
+    request(url, (error, response, body) => {
       if (error) {
         return reject(error);
       }
@@ -19,7 +24,7 @@ let requestAPI = (url) => {
   });
 }
 
-var isEbook = function(string){
+var isEbook = (string) => {
   let chineseList = ["電子書", "二手書"];
   for (var i = 0; i < chineseList.length; i++) {
     if (string.indexOf(chineseList[i]) > -1) {
@@ -36,7 +41,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.post('/url', function (req, res, next) {
+app.post('/url', (req, res, next) => {
   let urlParse = url.parse(req.body.path);
   console.log(urlParse.hostname);
   switch (urlParse.hostname) {
@@ -80,10 +85,10 @@ app.post('/url', function (req, res, next) {
       let originPrice = $('.item_description > li:nth-child(3) > del:nth-child(2)').text();
       let disCountPrice = $('span.pricing:nth-child(3)').text();
       let discount = $('span.pricing:nth-child(2)').text();
-      console.info('書名：', bookName);
-      console.info('原始金額：', originPrice);
-      console.info('折扣後金額：', disCountPrice);
-      console.info('折扣：', discount);
+      console.log('書名：', bookName);
+      console.log('原始金額：', originPrice);
+      console.log('折扣後金額：', disCountPrice);
+      console.log('折扣：', bookName);
       // return originPrice + '_' + discount + '_'  + disCountPrice;
       res.send('天瓏' + ' ' + bookName + '_' + originPrice + '_' + discount + '_'  + disCountPrice + '_' + '實體書');
     });
@@ -91,6 +96,12 @@ app.post('/url', function (req, res, next) {
     default:
     res.send('not support this website');
   }
+
+  // res.json(req.body);
+
+
+
+
 });
 
 app.listen(3000, () => {
